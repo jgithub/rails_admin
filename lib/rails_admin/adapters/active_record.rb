@@ -35,7 +35,18 @@ module RailsAdmin
         if options[:page] && options[:per]
           scope = scope.send(Kaminari.config.page_method_name, options[:page]).per(options[:per])
         end
-        scope = scope.reorder("#{options[:sort]} #{options[:sort_reverse] ? 'asc' : 'desc'}") if options[:sort]
+
+        # Original way
+        # scope = scope.reorder("#{options[:sort]} #{options[:sort_reverse] ? 'asc' : 'desc'}") if options[:sort]
+
+        # Temorary Vaystays Hack
+        if options[:sort] 
+          if model_name == "GeographicRegion" && options[:sort].try(:to_s) == "geographic_regions.id"
+            options[:sort_reverse] = true
+          end
+          scope = scope.reorder("#{options[:sort]} #{options[:sort_reverse] ? 'asc' : 'desc'}") 
+        end
+        
         scope
       end
 
