@@ -674,10 +674,10 @@ describe 'RailsAdmin Config DSL Edit Section', type: :request do
       fill_in 'field_test_nested_field_tests_attributes_0_title', with: 'nested field test title 1 edited', visible: false
       find('#field_test_nested_field_tests_attributes_1__destroy', visible: false).set('true')
 
-      click_button 'Save' # first(:button, "Save").click
+      click_button 'Save'
+      is_expected.to have_content('Field test successfully updated')
 
       @record.reload
-
       expect(@record.comment.content.strip).to eq('nested comment content')
       expect(@record.nested_field_tests.length).to eq(1)
       expect(@record.nested_field_tests[0].title).to eq('nested field test title 1 edited')
@@ -798,6 +798,12 @@ describe 'RailsAdmin Config DSL Edit Section', type: :request do
       # team.revenue is nullable in the schema but has an AR
       # validates_numericality_of validation that allows nil
       field = RailsAdmin.config('Team').edit.fields.detect { |f| f.name == :revenue }
+      expect(field.properties.nullable?).to be_truthy
+      expect(field.required?).to be_falsey
+
+      # team.founded is nullable in the schema but has an AR
+      # validates_numericality_of validation that allows blank
+      field = RailsAdmin.config('Team').edit.fields.detect { |f| f.name == :founded }
       expect(field.properties.nullable?).to be_truthy
       expect(field.required?).to be_falsey
     end
@@ -1017,7 +1023,12 @@ describe 'RailsAdmin Config DSL Edit Section', type: :request do
       end
 
       after do
-        Team.serialized_attributes.clear
+        if Rails.version >= '4.2'
+          Team.reset_column_information
+          Team.attribute_type_decorations.clear
+        else
+          Team.serialized_attributes.clear
+        end
         Team.instance_eval { undef :color_enum }
       end
 

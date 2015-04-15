@@ -33,6 +33,7 @@ body.rails_admin {
     top: 50px;
     bottom: 0;
     background: #eaf0f1;
+    z-index: 100;
   }
 
   /* fat labels in forms */
@@ -116,8 +117,6 @@ body.rails_admin {
       fieldset {
         margin-left:-10px;
         .control-group > label {
-          padding-left:10px;
-          width:135px;
         }
         legend {
           float:left;
@@ -133,8 +132,6 @@ body.rails_admin {
       fieldset {
         margin-left:-20px;
         .control-group > label {
-          padding-left:20px;
-          width:125px;
         }
         legend {
           margin-left:20px;
@@ -181,7 +178,7 @@ body.rails_admin {
   // }
 
   /* nested nav */
-  .nav.nav-list {
+  .nav {
     .nav-level-1 {
       padding-left:30px;
     }
@@ -269,7 +266,7 @@ body.rails_admin {
     /* icons */
     td.links {
       max-width: none;
-      .inline {
+      .list-inline {
         margin:0px;
         li { display:inline-block; }
       }
